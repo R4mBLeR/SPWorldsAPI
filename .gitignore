@@ -2,7 +2,7 @@
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
-!**/src/test/**/build/
+/src/test/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
@@ -14,7 +14,6 @@ build/
 *.ipr
 out/
 !**/src/main/**/out/
-!**/src/test/**/out/
 .idea
 
 ### Eclipse ###
@@ -27,7 +26,6 @@ out/
 .sts4-cache
 bin/
 !**/src/main/**/bin/
-!**/src/test/**/bin/
 
 ### NetBeans ###
 /nbproject/private/
@@ -41,3 +39,5 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/src/test/java/
+/src/test/java/

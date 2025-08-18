@@ -7,7 +7,7 @@ public class User {
     private String status;
     private String[] roles;
     private City city;
-    private BaseCard[] cards;
+    private Card[] cards;
     private String createdAt;
 
     public User() {
@@ -37,7 +37,7 @@ public class User {
         return city;
     }
 
-    public BaseCard[] getCards(){
+    public Card[] getCards(){
         return cards;
     }
 
