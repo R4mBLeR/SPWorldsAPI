@@ -3,9 +3,7 @@ package net.r4mble;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.r4mble.types.Card;
-import net.r4mble.types.Player;
-import net.r4mble.types.User;
+import net.r4mble.types.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -73,7 +71,7 @@ public class SPWorldsClient extends Card {
         return gson.fromJson(response.body(), User.class);
     }
 
-    public boolean createTransfer(String number, int amount, String comment) {
+    public boolean makeTransfer(String number, int amount, String comment) {
             JsonObject requestBody = new JsonObject();
             requestBody.addProperty("receiver", number);
             requestBody.addProperty("amount", amount);
@@ -94,8 +92,12 @@ public class SPWorldsClient extends Card {
         }
     }
 
-    public boolean createTransfer(String number, int amount) {
-        return createTransfer(number,amount, " ");
+    public boolean makeTransfer(String number, int amount) {
+        return makeTransfer(number,amount, " ");
+    }
+
+    public Payment createPayment(Item[] items, String redirectUrl, String webhookUrl, String data) {
+        return null;
     }
 
     private HttpResponse<String> makeRequest(String endpoint){
