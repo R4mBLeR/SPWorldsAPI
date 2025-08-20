@@ -1,8 +1,7 @@
 package net.r4mble;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 import net.r4mble.types.*;
 
 import java.io.IOException;
@@ -11,6 +10,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -97,7 +97,29 @@ public class SPWorldsClient extends Card {
     }
 
     public Payment createPayment(Item[] items, String redirectUrl, String webhookUrl, String data) {
-        return null;
+        JsonObject requestBody = new JsonObject();
+        JsonArray itemsArray = new JsonArray();
+        for (Item item : items) {
+            itemsArray.add(gson.toJsonTree(item));
+        }
+        requestBody.add("items", itemsArray);
+        requestBody.addProperty("redirectUrl", redirectUrl);
+        requestBody.addProperty("webhookUrl", webhookUrl);
+        requestBody.addProperty("data", data);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "payments"))
+                .header("Authorization", getAuthorizationHeader())
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            return gson.fromJson(response.body(), Payment.class);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private HttpResponse<String> makeRequest(String endpoint){
