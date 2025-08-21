@@ -39,16 +39,25 @@ public class SPWorldsAPI {
 
     public Player getPlayerByDiscordId(String discordId, String id, String token){
         HttpResponse<String> response = makeRequest("users/" + discordId);
+        if(response==null){
+            return null;
+        }
         return gson.fromJson(response.body(), Player.class);
     }
 
     public BaseCard[] getCardsByPlayerName(String playerName){
         HttpResponse<String> response = makeRequest("accounts/"+ playerName +"/cards");
+        if(response==null){
+            return null;
+        }
         return gson.fromJson(response.body(), BaseCard[].class);
     }
 
     public User getUser(){
         HttpResponse<String> response = makeRequest("accounts/me");
+        if(response==null){
+            return null;
+        }
         return gson.fromJson(response.body(), User.class);
     }
 

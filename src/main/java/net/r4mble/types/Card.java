@@ -21,6 +21,9 @@ public class Card extends BaseCard {
     public Card(String id, String token) {
         this.id = id;
         this.token = token;
+        if(SPWorldsAPI.getAuthStatus(id, token)!=200) {
+            return;
+        }
         BaseCard[] cards = getUser().getCards();
         for (BaseCard card : cards) {
             if (Objects.equals(card.getId(), this.id)) {
@@ -35,8 +38,11 @@ public class Card extends BaseCard {
         return token;
     }
 
-    public int getBalance() {
+    public Integer getBalance() {
         HttpResponse<String> response = makeRequest("card");
+        if(response==null){
+            return null;
+        }
         JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
         return json.get("balance").getAsInt();
     }
@@ -53,6 +59,9 @@ public class Card extends BaseCard {
 
     public User getUser(){
         HttpResponse<String> response = makeRequest("accounts/me");
+        if(response==null){
+            return null;
+        }
         return gson.fromJson(response.body(), User.class);
     }
 
