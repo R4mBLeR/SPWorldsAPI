@@ -1,14 +1,13 @@
 package net.r4mble.types;
 
 import com.google.gson.*;
+import net.r4mble.SPWorldsAPI;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
-import java.util.Base64;
 import java.util.Objects;
 
 import static net.r4mble.Constants.BASE_URL;
@@ -32,9 +31,8 @@ public class Card extends BaseCard {
         }
     }
 
-    public int getAuthStatus() {
-        HttpResponse<String> response = makeRequest("card");
-        return response != null ? response.statusCode() : 503;
+    public String getToken() {
+        return token;
     }
 
     public int getBalance() {
@@ -51,16 +49,6 @@ public class Card extends BaseCard {
         } else {
             return json.get("webhook").getAsString();
         }
-    }
-
-    public Player getPlayerByDiscordId(String discordId){
-        HttpResponse<String> response = makeRequest("users/" + discordId);
-        return gson.fromJson(response.body(), Player.class);
-    }
-
-    public BaseCard[] getCardsByPlayerName(String playerName){
-        HttpResponse<String> response = makeRequest("accounts/"+ playerName +"/cards");
-        return gson.fromJson(response.body(), BaseCard[].class);
     }
 
     public User getUser(){
@@ -120,30 +108,10 @@ public class Card extends BaseCard {
     }
 
     private HttpResponse<String> makeRequest(String endpoint){
-        HttpRequest  request =  HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + endpoint))
-                .header("Authorization", getAuthorizationHeader())
-                .timeout(Duration.ofSeconds(5))
-                .build();
-
-        HttpResponse<String> response;
-        try {
-            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() != 200) {
-                return null;
-            }
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        return response;
+        return SPWorldsAPI.makeRequest(endpoint, id, token);
     }
 
     private String getAuthorizationHeader() {
-        return "Bearer " + this.getBase64Key();
+        return SPWorldsAPI.getAuthorizationHeader(id, token);
     }
-
-    private String getBase64Key() {
-        return Base64.getEncoder().encodeToString((id + ":" + token).getBytes());
-    }
-
 }
