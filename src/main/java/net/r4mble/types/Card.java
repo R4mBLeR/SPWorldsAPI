@@ -56,7 +56,7 @@ public class Card extends BaseCard {
         return gson.fromJson(response.body(), User.class);
     }
 
-    public boolean makeTransfer(String number, int amount, String comment) {
+    public HttpResponse<String> makeTransfer(String number, int amount, String comment) {
             JsonObject requestBody = new JsonObject();
             requestBody.addProperty("receiver", number);
             requestBody.addProperty("amount", amount);
@@ -70,14 +70,13 @@ public class Card extends BaseCard {
                     .build();
 
         try {
-            httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return true;
+            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            return false;
+            return null;
         }
     }
 
-    public boolean makeTransfer(String number, int amount) {
+    public HttpResponse<String> makeTransfer(String number, int amount) {
         return makeTransfer(number,amount, " ");
     }
 
