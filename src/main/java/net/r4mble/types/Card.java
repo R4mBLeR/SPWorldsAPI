@@ -28,6 +28,7 @@ public class Card extends BaseCard {
         for (BaseCard card : cards) {
             if (Objects.equals(card.getId(), this.id)) {
                 this.name = card.getName();
+                this.number = card.getNumber();
                 this.color = card.getColor();
                 break;
             }

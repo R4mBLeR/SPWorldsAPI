@@ -3,7 +3,7 @@ package net.r4mble.types;
 public class BaseCard {
     protected String id;
     protected String name;
-    private String number;
+    protected String number;
     protected int color;
 
     public String getId() {
